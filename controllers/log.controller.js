@@ -28,10 +28,13 @@ async function addLog(req, res){
       user.logs.push(log._id)
       user.save()
       res.send({result: 'Success'})
+    }).catch(err=> {
+      console.log(err);
+      return res.status(400).json({message: err.message})  
     })
     
-  } catch(e) {
-    console.log(e);
+  } catch(err) {
+    console.log(err);
     return res.status(500).json({message: 'Cannot add log'})
   }
 }

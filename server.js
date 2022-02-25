@@ -5,9 +5,11 @@ const routes = require('./router')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 
-const DB_URL = 'mongodb+srv://user:nnmg3MOvY1K5Jrh2@cluster0.bsxxb.mongodb.net/Cluster0?retryWrites=true&w=majority'
 
 require('dotenv').config()
+
+const DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.bsxxb.mongodb.net/Cluster0?retryWrites=true&w=majority`
+
 
 app.use(cors())
 app.use(express.static('public'))

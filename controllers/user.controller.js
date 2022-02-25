@@ -1,4 +1,5 @@
 const User = require('../models/user.model')
+const Log = require('../models/log.model')
 
 async function getUsers({res}){
   try {
@@ -14,6 +15,10 @@ async function getUsers({res}){
 async function getUserLogs(req, res){
   try {
     const {limit = 10, from = new Date('1970-01-01'), to = new Date()} = req.query
+    
+    const logs = async() => { 
+      return await Log.find({});
+    }
 
     await User.findOne({
       _id: req.params._id
@@ -28,17 +33,22 @@ async function getUserLogs(req, res){
       },
       select: "-user",
       options: {
-        limit
+        limit: JSON.parse(limit)
       }
     })
-    .exec((err, result)=>{
-      if(err) console.log(err)
-      res.send({message: 'Success', result})
+    .exec(async (err, result)=>{
+      if(err){
+        console.log(err)
+        return res.status(400).json({message: err.message});
+      } 
+      res.send({message: 'Success', result, count: (await logs()).length})
     })
+
+    
     
   } catch(e) {
     console.log(e);
-    return res.status(500).json({message: 'Cannot get users'})
+    return res.status(404).json({message: e.message})
   }
 }
 
